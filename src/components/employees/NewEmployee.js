@@ -130,7 +130,7 @@ export const NewEmployeeForm = () => {
                             newEmployee(copy)
                         }
                     } name="location" id="location">
-                        <option value="default">chosoe a location</option>
+                        <option value="default">choose a location</option>
                         {locations.map((location) => {
                             return <option key={`location--${location.id}`} value={location.id}>{location.address}</option>
                         })}

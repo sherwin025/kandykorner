@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 export const ProductLst = () => {
     const [productsArray, setProducts] = useState([])
+    const [searchterm, setsearch] = useState([])
 
     useEffect(
         ()=>{
@@ -14,6 +15,13 @@ export const ProductLst = () => {
             )
         },
         []
+    )
+
+    useEffect(
+        ()=>{
+            filteredCandy()
+        },
+        [searchterm]
     )
 
     const PurchaseCandy = (event) => {
@@ -33,11 +41,46 @@ export const ProductLst = () => {
         })
     }
 
+    const filteredCandy = () => {
+        const thecandies = productsArray.filter((order)=>{
+            const lowername = order.name.toLowerCase()
+            const lowertype = order.productType.type.toLowerCase()
+            return lowername.includes(`${searchterm.searchterm}`) || lowertype.includes(`${searchterm.searchterm}`)
+        })
+
+        return thecandies
+    }
+
 
     return (
         <>
+        <fieldset>
+                <div className="form-group">
+                    <label htmlFor="description">Search Products:</label>
+                    <input
+                        onChange={
+                            (evt) => {
+                                const copy = {...searchterm}
+                                copy.searchterm = evt.target.value
+                                setsearch(copy)
+                            }
+                        }
+                        required autoFocus
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter product name or type of candy"
+                    />
+                </div>
+            </fieldset>
         {
-            productsArray.map(
+            filteredCandy().length > 0? filteredCandy().map(
+                (each) => {
+                    return <p key={`product--${each.id}`}> {each.name} is a {each.productType.type} and costs {each.price}
+                    <button value={each.id} className="btn btn-primary" onClick={PurchaseCandy}
+                    >Purchase</button></p>
+                }
+            )
+            : productsArray.map(
                 (each) => {
                     return <p key={`product--${each.id}`}> {each.name} is a {each.productType.type} and costs {each.price}
                     <button value={each.id} className="btn btn-primary" onClick={PurchaseCandy}
